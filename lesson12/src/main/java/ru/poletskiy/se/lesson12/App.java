@@ -52,6 +52,24 @@ public class App
         }
         System.out.println("Задание 5. Результат: минимальное значение = " + minValue + ", максимальное значение = " + maxValue);
         System.out.println();
+        // Задание 6
+        int[] task6IntArray = new int[]{ 48, 10, 4, 8, 24, 56, 21, 5, 7, 4, 2 };
+        System.out.println("Задание 6. Исходный массив: " + Arrays.toString(task6IntArray));
+        System.out.print("Задание 6. Результат: ");
+        if (checkBalance(task6IntArray)) System.out.println("В массиве ЕСТЬ место, в котором сумма левой и правой частей массива равны");
+        else System.out.println("В массиве НЕТ места, в котором сумма левой и правой частей массива равны");
+        System.out.println();
+    }
 
+    private static boolean checkBalance(int[] checkedArray) {
+        int leftSideSum = 0;
+        int rightSideSum = Arrays.stream(checkedArray).sum();
+        if (leftSideSum == rightSideSum) return true;
+        for (int i = 0; i < checkedArray.length; i++) {
+            leftSideSum += checkedArray[i];
+            rightSideSum -= checkedArray[i];
+            if (leftSideSum == rightSideSum) return true;
+        }
+        return false;
     }
 }
