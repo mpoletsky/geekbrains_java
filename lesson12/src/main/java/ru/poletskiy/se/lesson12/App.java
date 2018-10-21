@@ -14,5 +14,11 @@ public class App
             else task1IntArray[i] = 0;
         }
         System.out.println("Задание 1. Результат:       " + Arrays.toString(task1IntArray));
+        System.out.println();
+        // Задание 2
+        int[] task2IntArray = new int[8];
+        for (int i = 0, j = 0; i < 8; i++, j+=3) task2IntArray[i] = j;
+        System.out.println("Задание 2. Результат:       " + Arrays.toString(task2IntArray));
+        System.out.println();
     }
 }
