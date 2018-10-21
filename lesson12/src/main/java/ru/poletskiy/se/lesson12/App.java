@@ -28,5 +28,18 @@ public class App
         }
         System.out.println("Задание 3. Результат:       " + Arrays.toString(task3IntArray));
         System.out.println();
+        // Задание 4
+        int[][] task4IntArray = new int[10][10];
+        System.out.println("Задание 4. Исходный массив: ");
+        for (int i = 0; i < 10; i++) System.out.println(Arrays.toString(task4IntArray[i]));
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                boolean isDiagonal = (i == j) || (i + j == 9);
+                if (isDiagonal) task4IntArray[i][j] = 1;
+            }
+        }
+        System.out.println("Задание 4. Результат: ");
+        for (int i = 0; i < 10; i++) System.out.println(Arrays.toString(task4IntArray[i]));
+        System.out.println();
     }
 }
