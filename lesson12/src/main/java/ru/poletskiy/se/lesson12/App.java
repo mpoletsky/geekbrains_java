@@ -1,6 +1,7 @@
 package ru.poletskiy.se.lesson12;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class App
 {
@@ -59,6 +60,14 @@ public class App
         if (checkBalance(task6IntArray)) System.out.println("В массиве ЕСТЬ место, в котором сумма левой и правой частей массива равны");
         else System.out.println("В массиве НЕТ места, в котором сумма левой и правой частей массива равны");
         System.out.println();
+        // Задание 7
+        int[] task7IntArray = new int[]{ 48, 10, 4, 8, 24, 56, 21, 5, 7, 4, 2 };
+        System.out.println("Задание 7. Исходный массив: " + Arrays.toString(task7IntArray));
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите количество позиций, на которое нужно сдвинуть массив (положительное число - вправо, отрицательное - влево): ");
+        int countPosition = scanner.nextInt();
+        System.out.println("Задание 7. Результат:       " + Arrays.toString(shiftArrayElements(task7IntArray, countPosition)));
+        System.out.println();
     }
 
     private static boolean checkBalance(int[] checkedArray) {
@@ -71,5 +80,24 @@ public class App
             if (leftSideSum == rightSideSum) return true;
         }
         return false;
+    }
+
+    private static int[] shiftArrayElements(int[] shiftedArray, int countPosition) {
+        for (int j = 0; j < Math.abs(countPosition); j++) {
+            int firstElement = shiftedArray[0];
+            int lastElement = shiftedArray[shiftedArray.length - 1];
+            if (countPosition >= 0) {
+                for (int i = shiftedArray.length - 1; i >= 0; i--) {
+                    if (i == 0) shiftedArray[i] = lastElement;
+                    else shiftedArray[i] = shiftedArray[i - 1];
+                }
+            } else {
+                for (int i = 0; i < shiftedArray.length; i++) {
+                    if (i == shiftedArray.length - 1) shiftedArray[i] = firstElement;
+                    else shiftedArray[i] = shiftedArray[i + 1];
+                }
+            }
+        }
+        return shiftedArray;
     }
 }
