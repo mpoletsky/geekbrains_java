@@ -41,5 +41,17 @@ public class App
         System.out.println("Задание 4. Результат: ");
         for (int i = 0; i < 10; i++) System.out.println(Arrays.toString(task4IntArray[i]));
         System.out.println();
+        // Задание 5
+        int[] task5IntArray = new int[]{ 1, 10, 4, 8, 24, 56, 21, 5, 7, 4, 2 };
+        int maxValue = task5IntArray[0];
+        int minValue = task5IntArray[0];
+        System.out.println("Задание 5. Исходный массив: " + Arrays.toString(task5IntArray));
+        for (int i = 0; i < task5IntArray.length; i++) {
+            if (task5IntArray[i] > maxValue) maxValue = task5IntArray[i];
+            if (task5IntArray[i] < minValue) minValue = task5IntArray[i];
+        }
+        System.out.println("Задание 5. Результат: минимальное значение = " + minValue + ", максимальное значение = " + maxValue);
+        System.out.println();
+
     }
 }
