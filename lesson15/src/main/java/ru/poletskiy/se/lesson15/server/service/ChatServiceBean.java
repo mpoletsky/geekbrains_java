@@ -1,9 +1,7 @@
 package ru.poletskiy.se.lesson15.server.service;
 
-import ru.poletskiy.se.lesson15.server.api.ChatService;
-import ru.poletskiy.se.lesson15.server.api.MessageService;
-import ru.poletskiy.se.lesson15.server.api.SessionService;
-import ru.poletskiy.se.lesson15.server.api.UserService;
+import ru.poletskiy.se.lesson15.server.api.*;
+import ru.poletskiy.se.lesson15.server.model.Contact;
 import ru.poletskiy.se.lesson15.server.model.Message;
 import ru.poletskiy.se.lesson15.server.model.Session;
 import ru.poletskiy.se.lesson15.server.model.User;
@@ -11,6 +9,7 @@ import ru.poletskiy.se.lesson15.server.model.User;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.List;
+import java.util.Set;
 
 @WebService(endpointInterface = "ru.poletskiy.se.lesson15.server.api.ChatService")
 public final class ChatServiceBean implements ChatService {
@@ -83,5 +82,37 @@ public final class ChatServiceBean implements ChatService {
     @Override
     public List<String> getListLogin() {
         return userService.getListLogin();
+    }
+
+    @Override
+    @WebMethod
+    public void removeContacts(Session session) {
+        final User user = sessionService.getUser(session);
+        final ContactService contactService = new ContactServiceBean();
+        contactService.removeAll(user.login);
+    }
+
+    @Override
+    @WebMethod
+    public void createContact(Session session, String login) {
+        final User user = sessionService.getUser(session);
+        final ContactService contactService = new ContactServiceBean();
+        contactService.create(user.login, login);
+    }
+
+    @Override
+    @WebMethod
+    public void removeContact(Session session, String login) {
+        final User user = sessionService.getUser(session);
+        final ContactService contactService = new ContactServiceBean();
+        contactService.remove(user.login, login);
+    }
+
+    @Override
+    @WebMethod
+    public Set<Contact> getContacts(Session session) {
+        final User user = sessionService.getUser(session);
+        final ContactService contactService = new ContactServiceBean();
+        return contactService.contacts(user.login);
     }
 }
