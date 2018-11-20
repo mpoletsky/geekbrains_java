@@ -13,7 +13,6 @@ public class ClientCommandContactCreate extends AbstractClientCommand {
 
     @Override
     public void execute() {
-        System.out.println("sgdf: ");
         if (session == null) return;;
         System.out.println("ENTER LOGIN: ");
         final String login = scanner.nextLine();
