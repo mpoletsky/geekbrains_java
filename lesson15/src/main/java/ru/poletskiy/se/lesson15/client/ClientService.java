@@ -1,14 +1,15 @@
 package ru.poletskiy.se.lesson15.client;
 
+import ru.poletskiy.se.lesson15.client.command.*;
 import ru.poletskiy.se.lesson15.server.api.ChatService;
+import ru.poletskiy.se.lesson15.server.model.Contact;
 import ru.poletskiy.se.lesson15.server.model.Message;
 import ru.poletskiy.se.lesson15.server.model.Session;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.net.URL;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ClientService {
 
@@ -24,6 +25,14 @@ public class ClientService {
 
     private static final String CMD_USERS = "users";
 
+    private static final String CMD_CONTACTS = "contacts";
+
+    private static final String CMD_CONTACT_CREATE = "contact-create";
+
+    private static final String CMD_CONTACT_REMOVE = "contact-remove";
+
+    private static final String CMD_CONTACTS_REMOVE = "contacts-remove";
+
     private static final String CMD_BROADCAST = "broadcast";
 
     private static final String LOCAL_PART = "ChatServiceBeanService";
@@ -31,6 +40,8 @@ public class ClientService {
     private static final String LOCAL_NAMESPACE = "http://service.server.lesson15.se.poletskiy.ru/";
 
     private static final String WSDL = "http://localhost:8080/ChatService?wsdl";
+
+    private final Map<String, AbstractClientCommand> commands = new HashMap<>();
 
     private final URL url;
 
@@ -50,6 +61,17 @@ public class ClientService {
         service = Service.create(url, qname);
         chatService = service.getPort(ChatService.class);
         scanner = new Scanner(System.in);
+
+        commands.put(CMD_BROADCAST, new ClientCommandBroadcast(chatService, session, scanner));
+        commands.put(CMD_CONTACT_CREATE, new ClientCommandContactCreate(chatService, session, scanner));
+        commands.put(CMD_CONTACT_REMOVE, new ClientCommandContactRemove(chatService, session, scanner));
+        commands.put(CMD_CONTACTS, new ClientCommandContacts(chatService, session, scanner));
+        commands.put(CMD_LOGIN, new ClientCommandLogin(chatService, session, scanner));
+        commands.put(CMD_LOGOUT, new ClientCommandLogout(chatService, session, scanner));
+        commands.put(CMD_CONTACTS_REMOVE, new ClientCommandContactsRemove(chatService, session, scanner));
+        commands.put(CMD_READ, new ClientCommandRead(chatService, session, scanner));
+        commands.put(CMD_SEND, new ClientCommandSend(chatService, session, scanner));
+        commands.put(CMD_USERS, new ClientCommandUsers(chatService, session, scanner));
     }
 
     public void run() {
@@ -57,68 +79,9 @@ public class ClientService {
         while (!CMD_EXIT.equals(cmd)) {
             System.out.println("ENTER CMD: ");
             cmd = scanner.nextLine();
-            switch (cmd) {
-                case CMD_LOGIN:
-                    login();
-                    break;
-
-                case CMD_LOGOUT:
-                    logout();
-                    break;
-
-                case CMD_READ:
-                    read();
-                    break;
-
-                case CMD_SEND:
-                    send();
-                    break;
-
-                case CMD_USERS:
-                    users();
-                    break;
-
-                case CMD_BROADCAST:
-                    broadcast();
-                    break;
-            }
+            final Command command = commands.get(cmd);
+            if (command != null) command.execute();
+            System.out.println();
         }
-    }
-
-    private void login() {
-        System.out.println("ENTER LOGIN: ");
-        final String login = scanner.nextLine();
-        System.out.println("ENTER PASSWORD: ");
-        final String password = scanner.nextLine();
-        session = chatService.signIn(login, password);
-        final String msg = session != null ? "OK" : "ERROR";
-        System.out.println("AUTH: " + msg);
-    }
-
-    private void logout() { chatService.signOut(session); }
-
-    private void send() {
-        System.out.println("ENTER LOGIN: ");
-        final String login = scanner.nextLine();
-        System.out.println("ENTER MESSAGE: ");
-        final String message = scanner.nextLine();
-        chatService.sendMessage(session, login, message);
-    }
-
-    private void read() {
-        final List<Message> messages = chatService.getMessages(session);
-        for (final Message message : messages) {
-            System.out.println("** INCOME MESSAGE **");
-            System.out.println("FROM: " + message.source);
-            System.out.println("TEXT: " + message.text);
-        }
-    }
-
-    private void users() { System.out.println(chatService.getListLogin()); }
-
-    private void broadcast() {
-        System.out.println("ENTER MESSAGE: ");
-        final String message = scanner.nextLine();
-        chatService.sendBroadcast(session, message);
     }
 }
